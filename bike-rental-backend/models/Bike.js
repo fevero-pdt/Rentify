@@ -1,10 +1,12 @@
 const mongoose = require('mongoose');
 
 const bikeSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  model: { type: String, required: true },
-  price: { type: Number, required: true },
-  ownerId: { type: String, required: true }, // User ID of the bike owner
+    name: String,
+    type: String,
+    hourlyRate: Number,
+    location: String,
+    isAvailable: { type: Boolean, default: true },
 });
 
-module.exports = mongoose.model('Bike', bikeSchema);
+const Bike = mongoose.model('Bike', bikeSchema);
+module.exports = Bike;

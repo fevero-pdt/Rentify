@@ -1,20 +1,33 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import BikeItem from "./BikeItem";
+import React, { useEffect, useState } from 'react';
+import { fetchBikes, deleteBike } from '../api';
 
 const BikeList = () => {
-  // Retrieve the list of bikes from the Redux store
-  const bikes = useSelector((state) => state.bikes);
-  // Retrieve the current user from the Redux store
-  const user = useSelector((state) => state.user);
+    const [bikes, setBikes] = useState([]);
 
-  return (
-    <div>
-      {bikes.map((bike) => (
-        <BikeItem key={bike.id} bike={bike} user={user} />
-      ))}
-    </div>
-  );
+    useEffect(() => {
+        const getBikes = async () => {
+            const data = await fetchBikes();
+            setBikes(data);
+        };
+        getBikes();
+    }, []);
+
+    const handleDelete = async (bike) => {
+        const response = await deleteBike(bike);
+        if (response.ok) setBikes(bikes.filter(b => b.name !== bike.name || b.location !== bike.location));
+        else alert('Failed to delete bike');
+    };
+
+    return (
+        <ul>
+            {bikes.map(bike => (
+                <li key={bike._id}>
+                    {bike.name} - {bike.type} - {bike.location}
+                    <button onClick={() => handleDelete(bike)}>Delete</button>
+                </li>
+            ))}
+        </ul>
+    );
 };
 
 export default BikeList;

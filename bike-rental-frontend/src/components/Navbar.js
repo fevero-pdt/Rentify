@@ -19,7 +19,6 @@ const Navbar = () => {
           <>
             <li><Link to="/profile">Profile</Link></li>
             <li><button onClick={handleLogout}>Logout</button></li>
-            <li><Link to="/add-bike">Add Bike</Link></li>
           </>
         ) : (
           <>

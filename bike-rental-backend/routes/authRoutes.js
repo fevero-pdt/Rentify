@@ -42,13 +42,13 @@ router.post("/login", async (req, res) => {
         // Check if the user exists
         const user = await User.findOne({ email });
         if (!user) {
-            return alert({ message: "Invalid credentials." });
+            return res.status(400).json({ message: "Invalid credentials." });
         }
 
         // Check if the password is correct
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return alert({ message: "Invalid credentials." });
+            return res.status(400).json({ message: "Invalid credentials." });
         }
 
         // Create and assign a token (JWT)

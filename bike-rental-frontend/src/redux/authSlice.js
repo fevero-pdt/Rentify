@@ -44,3 +44,25 @@ export const { logout } = authSlice.actions;
 
 export default authSlice.reducer;
 
+
+
+// import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+// import API from "../api";
+
+// export const login = createAsyncThunk("auth/login", async (credentials) => {
+//   const { data } = await API.post("/auth/login", credentials);
+//   localStorage.setItem("token", data.token);
+//   return data.token;
+// });
+
+// export const authSlice = createSlice({
+//   name: "auth",
+//   initialState: { token: localStorage.getItem("token") || null },
+//   reducers: { logout: (state) => { state.token = null; localStorage.removeItem("token"); } },
+//   extraReducers: (builder) => {
+//     builder.addCase(login.fulfilled, (state, action) => { state.token = action.payload; });
+//   },
+// });
+
+// export const { logout } = authSlice.actions;
+// export default authSlice.reducer;
