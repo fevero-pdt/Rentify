@@ -1,4 +1,4 @@
-const isAuthenticate = (req, res, next) => {
+const isAuthenticated = (req, res, next) => {
     if (req.session && req.session.user) {
       req.userId = req.session.user._id;
       next();
@@ -15,5 +15,5 @@ const isAdmin = (req, res, next) => {
     }
   };
   
-module.exports = { isAuthenticate, isAdmin };
+module.exports = { isAuthenticated, isAdmin };
   

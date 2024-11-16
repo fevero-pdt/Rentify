@@ -28,6 +28,28 @@ export const resetPassword = async (resetData) => {
   return await axios.post("http://localhost:5002/users/reset-password", resetData);
 };
 
+// Admin
+export const deleteAdminUser = async (userId) => {
+  return await API.delete(`/admin/users/${userId}`);
+};
+
+export const deleteAdminItem = async (itemId) => {
+  return await API.delete(`/admin/items/${itemId}`);
+};
+export const addAdminUser = async (userData) => {
+  return await axios.post("http://localhost:5002/admin/add-users", userData, {
+    withCredentials: true,
+  });
+};
+
+export const addAdminItem = async (itemData) => {
+  return await axios.post("http://localhost:5002/admin/add-items", itemData, {
+    withCredentials: true,
+  });
+};
+
+
+
 // Owner
 export const addItem = async (itemData) => {
   return axios.post("http://localhost:5002/items/addItem", itemData, {

@@ -7,6 +7,7 @@ const { PORT, SESSION_SECRET } = require("./config/config");
 
 const userRoutes = require("./routes/userRoutes");
 const itemRoutes = require("./routes/itemRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 const app = express();
 
@@ -59,41 +60,42 @@ const isAdmin = (req, res, next) => {
 // Routes
 app.use("/users", userRoutes);
 app.use("/items", itemRoutes);
+app.use("/admin", adminRoutes);
 
 // Admin Users List Route
-app.get("/admin/users", isAdmin, async (req, res) => {
-  try {
-    const users = await User.find();
-    res.status(200).json(users);
-  } catch (error) {
-    console.error("Error fetching users:", error);
-    res.status(500).json({ message: "Failed to fetch users." });
-  }
-});
+// app.get("/admin/users", isAdmin, async (req, res) => {
+//   try {
+//     const users = await User.find();
+//     res.status(200).json(users);
+//   } catch (error) {
+//     console.error("Error fetching users:", error);
+//     res.status(500).json({ message: "Failed to fetch users." });
+//   }
+// });
 
-// Assign Items to Owners Route
-app.put("/assign-items-to-owners", async (req, res) => {
-  try {
-    const items = await Item.find();
+// // Assign Items to Owners Route
+// app.put("/assign-items-to-owners", async (req, res) => {
+//   try {
+//     const items = await Item.find();
 
-    for (const item of items) {
-      if (item.owner) {
-        const user = await User.findById(item.owner);
+//     for (const item of items) {
+//       if (item.owner) {
+//         const user = await User.findById(item.owner);
 
-        if (user && !user.items.includes(item._id)) {
-          user.items.push(item._id);
-          await user.save();
-          console.log(`Added item '${item.name}' to user '${user.email}'`);
-        }
-      }
-    }
+//         if (user && !user.items.includes(item._id)) {
+//           user.items.push(item._id);
+//           await user.save();
+//           console.log(`Added item '${item.name}' to user '${user.email}'`);
+//         }
+//       }
+//     }
 
-    res.status(200).json({ message: "Items successfully assigned to owners." });
-  } catch (error) {
-    console.error("Error assigning items to owners:", error);
-    res.status(500).json({ message: "Failed to assign items to owners." });
-  }
-});
+//     res.status(200).json({ message: "Items successfully assigned to owners." });
+//   } catch (error) {
+//     console.error("Error assigning items to owners:", error);
+//     res.status(500).json({ message: "Failed to assign items to owners." });
+//   }
+// });
 
 
 
