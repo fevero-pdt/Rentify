@@ -12,10 +12,10 @@ const verificationCodes = new Map(); // Temporary store for verification codes
 router.post("/register", async (req, res) => {
   const { email, password, roles } = req.body;
 
-  // Check email domain
-  // if (!email.endsWith("@nitc.ac.in")) {
-  //   return res.status(400).json({ message: "Only emails with @nitc.ac.in domain are allowed." });
-  // }
+  //Check email domain
+  if (!email.endsWith("@nitc.ac.in")) {
+    return res.status(400).json({ message: "Only emails with @nitc.ac.in domain are allowed." });
+  }
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
