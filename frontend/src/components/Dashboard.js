@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { checkSession, logoutUser, fetchItems, searchItems } from "../services/api";
+import { checkSession, fetchItems, searchItems } from "../services/api";
 import RentalRequestButton from "./RentalRequestButton";
 import ViewRequests from "./ViewRequests";
 
@@ -50,15 +50,15 @@ const Dashboard = ({ user, setUser }) => {
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      await logoutUser();
-      setUser(null);
-      navigate("/login");
-    } catch (error) {
-      console.error("Failed to logout:", error);
-    }
-  };
+  // const handleLogout = async () => {
+  //   try {
+  //     await logoutUser();
+  //     setUser(null);
+  //     navigate("/login");
+  //   } catch (error) {
+  //     console.error("Failed to logout:", error);
+  //   }
+  // };
 
   if (loading) {
     return <p>Loading...</p>;

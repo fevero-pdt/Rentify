@@ -4,7 +4,6 @@ const session = require("express-session");
 const cors = require("cors");
 const connectDB = require("./config/db");
 const { PORT, SESSION_SECRET } = require("./config/config");
-// const { isAuthenticated, isAdmin } = require("./middleware/auth");
 
 const userRoutes = require("./routes/userRoutes");
 const itemRoutes = require("./routes/itemRoutes");
@@ -16,7 +15,14 @@ connectDB();
 
 // Middleware
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+
+// CORS Configuration
+app.use(
+  cors({
+    origin: "http://localhost:3000", // Frontend URL
+    credentials: true,              // Allow credentials (cookies)
+  })
+);
 
 // Session Middleware
 app.use(
@@ -25,16 +31,17 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-      secure: false, // Change to `true` in production (HTTPS required)
+      secure: false, // Set to true in production with HTTPS
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 1 day
     },
   })
 );
 
+// Authentication Middleware
 const isAuthenticated = (req, res, next) => {
   if (req.session && req.session.user) {
-    req.userId = req.session.user._id;
+    req.userId = req.session.user._id; // Attach userId to req object
     next();
   } else {
     res.status(401).json({ message: "Not authenticated" });
@@ -113,11 +120,10 @@ app.get("/dashboard", isAuthenticated, (req, res) => {
   res.json({ message: `Welcome, ${req.session.user.email}` });
 });
 
-
-
 // Start Server
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
+// Export Middleware for Use in Routes
 module.exports = {
   isAuthenticated,
 };

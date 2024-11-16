@@ -107,25 +107,31 @@ router.get("/search", async (req, res) => {
 // Request Item Route
 router.post("/:itemId/request", async (req, res) => {
     try {
-      const { itemId } = req.params;
+      if (!req.session || !req.session.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+  
+      const userId = req.session.user._id; // Logged-in user's ID
+      const itemId = req.params.itemId;
+      // const { itemId } = req.params;
   
       const item = await Item.findById(itemId);
       if (!item) {
         return res.status(404).json({ message: "Item not found" });
       }
   
-      if (item.owner.toString() === req.userId) {
+      if (item.owner.toString() === userId) {
         return res.status(400).json({ message: "You cannot request your own item." });
       }
   
       const existingRequest = item.rentalRequests.find(
-        (req) => req.renter.toString() === req.userId
+        (req) => req.renter.toString() === userId
       );
       if (existingRequest) {
         return res.status(400).json({ message: "Request already sent." });
       }
   
-      item.rentalRequests.push({ renter: req.userId });
+      item.rentalRequests.push({ renter: userId });
       await item.save();
   
       res.status(200).json({ message: "Rental request sent successfully." });
@@ -136,32 +142,48 @@ router.post("/:itemId/request", async (req, res) => {
 });
 
 
-// Get Rental Requests Route
 router.get("/:itemId/requests", async (req, res) => {
-    try {
-      const { itemId } = req.params;
-  
+  try {
+      // Check if user is authenticated
+      if (!req.session || !req.session.user) {
+          return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      const userId = req.session.user._id; // Logged-in user's ID
+      const itemId = req.params.itemId;
+
+      console.log("Fetching rental requests for item:", itemId, "by user:", userId);
+
+      // Find the item and populate rental requests
       const item = await Item.findById(itemId).populate("rentalRequests.renter", "email");
       if (!item) {
-        return res.status(404).json({ message: "Item not found" });
+          console.log("Item not found:", itemId);
+          return res.status(404).json({ message: "Item not found" });
       }
-  
-      if (item.owner.toString() !== req.userId) {
-        return res.status(403).json({ message: "Access denied. You are not the owner of this item." });
+
+      // Verify ownership
+      if (item.owner.toString() !== userId) {
+          console.log("User is not the owner of the item.");
+          return res.status(403).json({ message: "Access denied. You are not the owner of this item." });
       }
-  
+
+      console.log("Rental requests fetched successfully:", item.rentalRequests);
       res.status(200).json(item.rentalRequests);
-    } catch (error) {
+  } catch (error) {
       console.error("Error fetching rental requests:", error);
       res.status(500).json({ message: "Failed to fetch rental requests." });
-    }
+  }
 });
+
 
 // Respond to Rental Request Route
 router.put("/:itemId/requests/:requestId", async (req, res) => {
     try {
+
       const { itemId, requestId } = req.params;
       const { status } = req.body; // "accepted" or "rejected"
+
+      const userId = req.session.user._id; // Logged-in user's ID
   
       if (!["accepted", "rejected"].includes(status)) {
         return res.status(400).json({ message: "Invalid status." });
@@ -172,7 +194,7 @@ router.put("/:itemId/requests/:requestId", async (req, res) => {
         return res.status(404).json({ message: "Item not found." });
       }
   
-      if (item.owner.toString() !== req.userId) {
+      if (item.owner.toString() !== userId) {
         return res.status(403).json({ message: "Access denied. You are not the owner of this item." });
       }
   

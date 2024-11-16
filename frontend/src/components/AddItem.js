@@ -5,7 +5,7 @@ const AddItem = ({ user }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
-  const [message, setMessage] = useState("");
+  const [message] = useState("");
 
   const handleAddItem = async (e) => {
     e.preventDefault();
