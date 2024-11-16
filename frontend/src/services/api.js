@@ -5,12 +5,28 @@ const API = axios.create({
   withCredentials: true, // For handling cookies/sessions
 });
 
+API.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    console.error("API error:", error.response?.data?.message || error.message);
+    return Promise.reject(error);
+  }
+);
 
 
 // Auth
 export const registerUser = (userData) => API.post("/users/register", userData);
 export const verifyUser = (verificationData) => API.post("/users/verify", verificationData);
 export const loginUser = (credentials) => API.post("/users/login", credentials);
+
+// Forgot Password and Reset Password
+export const forgotPassword = async (email) => {
+  return await axios.post("http://localhost:5002/users/forgot-password", { email });
+};
+
+export const resetPassword = async (resetData) => {
+  return await axios.post("http://localhost:5002/users/reset-password", resetData);
+};
 
 // Owner
 export const addItem = async (itemData) => {
@@ -24,10 +40,9 @@ export const fetchProfile = async () => {
 export const deleteItem = async (itemId) => {
   return await axios.delete(`http://localhost:5002/items/${itemId}`, { withCredentials: true }); // Adjust base URL as needed
 };
-export const approveRent = (approvalData) => API.post("/owner/approve-rent", approvalData);
-
-// Renter
-export const rentItem = (rentData) => API.post("/renter/rent-item", rentData);
+export const fetchRequests = async (itemId) => {
+  return await axios.get(`http://localhost:5002/items/${itemId}/requests`, { withCredentials: true });
+};
 
 // Common
 export const fetchItems = async () => {
@@ -35,6 +50,14 @@ export const fetchItems = async () => {
 };
 export const searchItems = async (query) => {
   return await axios.get(`http://localhost:5002/items/search?query=${query}`, { withCredentials: true });
+};
+export const updatePassword = async (passwordForm) => {
+  const response = await axios.put(
+    "http://localhost:5002/users/update-password",
+    passwordForm,
+    { withCredentials: true }
+  );
+  return response.data;
 };
 export const checkSession = () => API.get("/session");
 export const logoutUser = () => API.post("/logout");

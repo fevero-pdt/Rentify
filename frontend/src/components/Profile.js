@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { fetchProfile, deleteItem } from "../services/api";
+import { fetchProfile, deleteItem, updatePassword } from "../services/api";
 
 const Profile = () => {
   const [profile, setProfile] = useState(null); // User profile data
   const [loading, setLoading] = useState(true); // Loading state
   const [query, setQuery] = useState(""); // Search query
   const [filteredItems, setFilteredItems] = useState([]); // Filtered items based on search
+  const [passwordForm, setPasswordForm] = useState({ oldPassword: "", newPassword: "" }); // Password form state
+  const [passwordMessage, setPasswordMessage] = useState(""); // Feedback message for password update
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -54,6 +56,18 @@ const Profile = () => {
     }
   };
 
+  const handlePasswordUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await updatePassword(passwordForm);
+      setPasswordMessage(response.message);
+      setPasswordForm({ oldPassword: "", newPassword: "" }); // Clear form after success
+    } catch (error) {
+      console.error("Error updating password:", error);
+      setPasswordMessage(error.response?.data?.message || "Failed to update password.");
+    }
+  };
+
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -68,6 +82,32 @@ const Profile = () => {
       <h2>User Information</h2>
       <p><strong>Email:</strong> {profile.email}</p>
       <p><strong>Roles:</strong> {profile.roles.join(", ")}</p>
+
+      <h2>Update Password</h2>
+      <form onSubmit={handlePasswordUpdate} style={{ marginBottom: "20px" }}>
+        <div>
+          <label>Old Password:</label>
+          <input
+            type="password"
+            value={passwordForm.oldPassword}
+            onChange={(e) => setPasswordForm({ ...passwordForm, oldPassword: e.target.value })}
+            required
+          />
+        </div>
+        <div>
+          <label>New Password:</label>
+          <input
+            type="password"
+            value={passwordForm.newPassword}
+            onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
+            required
+          />
+        </div>
+        <button type="submit" style={{ marginTop: "10px" }}>
+          Update Password
+        </button>
+      </form>
+      {passwordMessage && <p style={{ color: passwordMessage.includes("success") ? "green" : "red" }}>{passwordMessage}</p>}
 
       <h2>Search Your Owned Items</h2>
       <input

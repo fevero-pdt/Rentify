@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { loginUser } from "../services/api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 
 const Login = ({ setUser }) => {
   const [email, setEmail] = useState("");
@@ -11,7 +11,7 @@ const Login = ({ setUser }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Validate email domain
+    // Validate email domain (optional, uncomment if required)
     // if (!email.endsWith("@nitc.ac.in")) {
     //   setMessage("Only emails with @nitc.ac.in domain are allowed.");
     //   return;
@@ -49,6 +49,9 @@ const Login = ({ setUser }) => {
       <p>{message}</p>
       <p>
         Don't have an account? <a href="/register">Register</a>
+      </p>
+      <p>
+        Forgot your password? <a href="/forgot-password">Reset it here</a>
       </p>
       {/* <p>
         Are you an admin? <a href="/admin/login">Go to Admin Login</a>

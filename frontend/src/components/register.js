@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { registerUser, verifyUser } from "../services/api";
-// import axios from "axios";
+import axios from "axios";
 import { Navigate } from "react-router-dom";
 
 const Register = () => {

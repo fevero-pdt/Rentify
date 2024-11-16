@@ -115,6 +115,98 @@ router.get("/profile", async (req, res) => {
   }
 });
 
+router.put("/update-password", async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+
+    const userId = req.session.user._id;
+
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({ message: "Please provide both old and new passwords." });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Old password is incorrect." });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+
+    res.status(200).json({ message: "Password updated successfully." });
+  } catch (error) {
+    console.error("Error updating password:", error);
+    res.status(500).json({ message: "Failed to update password." });
+  }
+});
+
+
+// Forgot Password Route
+router.post("/forgot-password", async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ message: "Please provide your email." });
+  }
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(404).json({ message: "User not found." });
+  }
+
+  const code = generateVerificationCode();
+  verificationCodes.set(email, code); // Store the code temporarily
+
+  try {
+    await sendVerificationEmail(email, code);
+    res.status(200).json({ message: "Verification code sent to your email." });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    res.status(500).json({ message: "Failed to send verification email." });
+  }
+});
+
+// Reset Password Route
+router.post("/reset-password", async (req, res) => {
+  const { email, code, newPassword } = req.body;
+
+  if (!email || !code || !newPassword) {
+    return res.status(400).json({ message: "Please provide all required fields." });
+  }
+
+  const storedCode = verificationCodes.get(email);
+  if (!storedCode || storedCode !== code) {
+    return res.status(400).json({ message: "Invalid or expired verification code." });
+  }
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(404).json({ message: "User not found." });
+  }
+
+  try {
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update user's password and save changes
+    user.password = hashedPassword;
+    await user.save();
+
+    // Remove the verification code after successful password reset
+    verificationCodes.delete(email);
+
+    res.status(200).json({ message: "Password reset successfully." });
+  } catch (error) {
+    console.error("Error resetting password:", error);
+    res.status(500).json({ message: "Failed to reset password." });
+  }
+});
 
 
 module.exports = router;
