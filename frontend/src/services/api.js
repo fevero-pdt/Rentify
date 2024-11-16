@@ -44,6 +44,12 @@ export const fetchRequests = async (itemId) => {
   return await axios.get(`http://localhost:5002/items/${itemId}/requests`, { withCredentials: true });
 };
 
+// Renter
+export const returnItem = async (itemId) => {
+  return await API.post(`/items/${itemId}/return`);
+};
+
+
 // Common
 export const fetchItems = async () => {
   return await axios.get("http://localhost:5002/items/");

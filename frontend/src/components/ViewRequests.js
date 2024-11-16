@@ -5,6 +5,9 @@ const ViewRequests = ({ itemId }) => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isItemReturned, setIsItemReturned] = useState(false); // Track item return status
+  // const [isAvailable, setIsAvailable] = useState(true); // Track item's availability
+
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -48,6 +51,28 @@ const ViewRequests = ({ itemId }) => {
     }
   };
 
+  const handleReturnItem = async () => {
+    try {
+      const response = await axios.post(
+        `http://localhost:5002/items/${itemId}/return`,
+        {},
+        { withCredentials: true }
+      );
+      alert(response.data.message);
+
+      // Mark the item as returned in the UI
+      setIsItemReturned(true);
+
+      // Update the requests to reflect deletion of accepted requests
+      setRequests((prevRequests) =>
+        prevRequests.filter((req) => req.status !== "accepted")
+      );
+    } catch (err) {
+      console.error("Error returning item:", err);
+      alert("Failed to return the item.");
+    }
+  };
+
   if (loading) return <p>Loading requests...</p>;
 
   if (error) return <p style={{ color: "red" }}>{error}</p>;
@@ -60,7 +85,14 @@ const ViewRequests = ({ itemId }) => {
       ) : (
         <ul style={{ listStyleType: "none", padding: 0 }}>
           {requests.map((req) => (
-            <li key={req._id} style={{ marginBottom: "1em", borderBottom: "1px solid #ccc", paddingBottom: "1em" }}>
+            <li
+              key={req._id}
+              style={{
+                marginBottom: "1em",
+                borderBottom: "1px solid #ccc",
+                paddingBottom: "1em",
+              }}
+            >
               <p>
                 <strong>Renter Email:</strong> {req.renter?.email || "Unknown"} <br />
                 <strong>Status:</strong> {req.status}
@@ -85,6 +117,17 @@ const ViewRequests = ({ itemId }) => {
             </li>
           ))}
         </ul>
+      )}
+      {!isItemReturned ? (
+        <button
+          onClick={handleReturnItem}
+          className="btn btn-warning"
+          style={{ marginTop: "1em" }}
+        >
+          Return Item
+        </button>
+      ) : (
+        <p style={{ color: "green", marginTop: "1em" }}>Item has been returned successfully.</p>
       )}
     </div>
   );

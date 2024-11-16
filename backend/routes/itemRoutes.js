@@ -141,7 +141,7 @@ router.post("/:itemId/request", async (req, res) => {
     }
 });
 
-
+// Get Rental Requests Route
 router.get("/:itemId/requests", async (req, res) => {
   try {
       // Check if user is authenticated
@@ -225,11 +225,42 @@ router.put("/:itemId/requests/:requestId", async (req, res) => {
       res.status(500).json({ message: "Failed to respond to rental request." });
     }
   });
-  
-  
-  
 
-  
+// Return Item Route
+router.post("/:itemId/return", async (req, res) => {
+  try {
+    const { itemId } = req.params;
+
+    const userId = req.session.user._id; // Logged-in user's ID
+
+    // Find the item
+    const item = await Item.findById(itemId);
+    if (!item) {
+      return res.status(404).json({ message: "Item not found." });
+    }
+
+    // Check if the logged-in user is the current renter
+    if (item.owner?.toString() !== userId) {
+      return res.status(403).json({ message: "You are not the owner of this item." });
+    }
+
+    // Mark the item as available and remove the renter
+    item.isAvailable = true;
+    item.renter = null;
+
+    // Delete accepted rental requests
+    item.rentalRequests = item.rentalRequests.filter(
+      (request) => request.status !== "accepted"
+    );
+
+    await item.save();
+
+    res.status(200).json({ message: "Item returned successfully." });
+  } catch (error) {
+    console.error("Error returning item:", error);
+    res.status(500).json({ message: "Failed to return the item." });
+  }
+});
 
 
 module.exports = router;
