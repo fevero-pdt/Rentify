@@ -4,26 +4,42 @@ const { EMAIL_USER, EMAIL_PASS } = require("../config/config");
 
 // Email Transporter Configuration
 const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: { user: EMAIL_USER, pass: EMAIL_PASS },
+  service: "gmail", // Or your preferred email service
+  auth: {
+    user: EMAIL_USER,
+    pass: EMAIL_PASS,
+  },
 });
 
 // Generate a random verification code
 const generateVerificationCode = () => crypto.randomBytes(3).toString("hex");
 
-// Send a verification email
-const sendVerificationEmail = async (email, code) => {
+// General function to send an email
+const sendEmail = async ({ to, subject, text, html }) => {
   try {
-    await transporter.sendMail({
+    const mailOptions = {
       from: EMAIL_USER,
-      to: email,
-      subject: "Verify Your Email",
-      text: `Your verification code is: ${code}`,
-    });
+      to,
+      subject,
+      text,
+      html, // Optional HTML content for rich formatting
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log(`Email sent to ${to}`);
   } catch (error) {
     console.error("Error sending email:", error);
     throw new Error("Failed to send email");
   }
 };
 
-module.exports = { generateVerificationCode, sendVerificationEmail };
+// Function to send a verification email
+const sendVerificationEmail = async (email, code) => {
+  const subject = "Verify Your Email";
+  const text = `Your verification code is: ${code}`;
+  const html = `<p>Your verification code is: <strong>${code}</strong></p>`;
+
+  return sendEmail({ to: email, subject, text, html });
+};
+
+module.exports = { generateVerificationCode, sendVerificationEmail, sendEmail };

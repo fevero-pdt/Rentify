@@ -1,6 +1,7 @@
 const express = require("express");
 const Item = require("../models/Item");
-const User = require("../models/User"); 
+const User = require("../models/User");
+const { sendEmail } = require("../utils/email");
 // const { isAuthenticated } = require("../server");
 // const { authenticate } = require("../middleware/auth");
 
@@ -160,7 +161,11 @@ router.get("/:itemId/requests", async (req, res) => {
     console.log("Fetching rental requests for item:", itemId, "by user:", userId);
 
     // Find the item and populate rental requests
-    const item = await Item.findById(itemId).populate("rentalRequests.renter", "email");
+    const item = await Item.findById(itemId).populate({
+      path: "rentalRequests.renter", // Populate the renter field
+      select: "email", // Select only the email field of the renter
+    });
+
     if (!item) {
       console.log("Item not found:", itemId);
       return res.status(404).json({ message: "Item not found" });
@@ -172,17 +177,8 @@ router.get("/:itemId/requests", async (req, res) => {
       return res.status(403).json({ message: "Access denied. You are not the owner of this item." });
     }
 
-    // Prepare rental requests with desired fields
-    const rentalRequests = item.rentalRequests.map((request) => ({
-      _id: request._id,
-      renter: request.renter?.email || "Unknown",
-      status: request.status,
-      requestDate: request.requestDate,
-      desiredDate: request.desiredDate,
-    }));
-
-    console.log("Rental requests fetched successfully:", rentalRequests);
-    res.status(200).json(rentalRequests);
+    console.log("Rental requests fetched successfully:", item.rentalRequests);
+    res.status(200).json(item.rentalRequests);
   } catch (error) {
     console.error("Error fetching rental requests:", error);
     res.status(500).json({ message: "Failed to fetch rental requests." });
@@ -190,56 +186,79 @@ router.get("/:itemId/requests", async (req, res) => {
 });
 
 
-
 // Respond to Rental Request Route
 router.put("/:itemId/requests/:requestId", async (req, res) => {
-    try {
+  try {
+    const { itemId, requestId } = req.params;
+    const { status } = req.body; // "accepted" or "rejected"
+    const userId = req.session.user._id; // Logged-in user's ID
 
-      const { itemId, requestId } = req.params;
-      const { status } = req.body; // "accepted" or "rejected"
-
-      const userId = req.session.user._id; // Logged-in user's ID
-  
-      if (!["accepted", "rejected"].includes(status)) {
-        return res.status(400).json({ message: "Invalid status." });
-      }
-  
-      const item = await Item.findById(itemId);
-      if (!item) {
-        return res.status(404).json({ message: "Item not found." });
-      }
-  
-      if (item.owner.toString() !== userId) {
-        return res.status(403).json({ message: "Access denied. You are not the owner of this item." });
-      }
-  
-      const request = item.rentalRequests.id(requestId);
-      if (!request) {
-        return res.status(404).json({ message: "Request not found." });
-      }
-  
-      request.status = status;
-  
-      if (status === "accepted") {
-        // Assign renter and mark item as unavailable
-        item.renter = request.renter;
-        item.isAvailable = false;
-  
-        // Reject all other requests
-        item.rentalRequests.forEach((req) => {
-          if (req._id.toString() !== requestId) {
-            req.status = "rejected";
-          }
-        });
-      }
-  
-      await item.save();
-      res.status(200).json({ message: `Request has been ${status}.` });
-    } catch (error) {
-      console.error("Error responding to rental request:", error);
-      res.status(500).json({ message: "Failed to respond to rental request." });
+    // Validate the status
+    if (!["accepted", "rejected"].includes(status)) {
+      return res.status(400).json({ message: "Invalid status." });
     }
-  });
+
+    // Find the item and populate the renter's email in rentalRequests
+    const item = await Item.findById(itemId).populate("rentalRequests.renter", "email");
+    if (!item) {
+      return res.status(404).json({ message: "Item not found." });
+    }
+
+    // Verify that the logged-in user is the owner of the item
+    if (item.owner.toString() !== userId) {
+      return res.status(403).json({ message: "Access denied. You are not the owner of this item." });
+    }
+
+    // Find the specific rental request
+    const request = item.rentalRequests.id(requestId);
+    if (!request) {
+      return res.status(404).json({ message: "Request not found." });
+    }
+
+    // Update the status of the rental request
+    request.status = status;
+
+    if (status === "accepted") {
+      // Assign the renter to the item and mark it as unavailable
+      item.renter = request.renter;
+      item.isAvailable = false;
+
+      // If needed, you can reject other requests here
+      // But the current logic does not automatically reject others
+    }
+
+    // Save the updated item
+    await item.save();
+
+    // Prepare to send an email to the renter
+    const renterEmail = request.renter?.email;
+    if (renterEmail) {
+      const emailSubject = `Your rental request has been ${status}`;
+      const emailText =
+        status === "accepted"
+          ? `Congratulations! Your rental request for the item "${item.name}" has been accepted.`
+          : `Unfortunately, your rental request for the item "${item.name}" has been rejected.`;
+
+      // Send email
+      await sendEmail({
+        to: renterEmail,
+        subject: emailSubject,
+        text: emailText,
+        html: `<p>${emailText}</p>`,
+      });
+    } else {
+      console.warn("Renter email is missing. Email notification was not sent.");
+    }
+
+    // Respond with success
+    res.status(200).json({ message: `Request has been ${status}.` });
+  } catch (error) {
+    console.error("Error responding to rental request:", error);
+    res.status(500).json({ message: "Failed to respond to rental request." });
+  }
+});
+
+
 
 // Return Item Route
 router.post("/:itemId/return", async (req, res) => {
