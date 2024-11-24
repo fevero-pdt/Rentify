@@ -4,7 +4,7 @@
     min-height: 100vh;
     align-items: center;
     justify-content: center; 
-    background-image: url('K:/Rentify/frontend/public/28802.jpg'); 
+    background-image: url('../../public/28802.jpg'); 
     background-size: cover; 
     background-position: center;
     background-repeat: no-repeat;
@@ -39,7 +39,7 @@
 /* Info container */
 .info-container {
     flex: 1; /* Occupy equal space with the login-form-container */
-    background-image: url('K:/Rentify/frontend/public/h.jpg'); /* Ensure this is the correct path */
+    background-image: url('../../public/h.jpg'); /* Ensure this is the correct path */
     background-size: cover; /* Ensures the image covers the entire container */
     background-position: center; /* Centers the image */
     color: white; /* Makes text stand out */
