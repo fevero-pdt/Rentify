@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import "./resetpass.css"
 const ResetPassword = () => {
   const location = useLocation();
   const [email, setEmail] = useState(location.state?.email || "");
@@ -28,9 +28,10 @@ const ResetPassword = () => {
   };
 
   return (
-    <div>
-      <h3>Reset Password</h3>
-      <form onSubmit={handleResetPassword}>
+    <div className="comp">
+      <div className="reset-pass">
+        <h3>Reset Password</h3>
+        <form onSubmit={handleResetPassword}>
         <div>
           <label>Email:</label>
           <input
@@ -59,8 +60,9 @@ const ResetPassword = () => {
           />
         </div>
         <button type="submit">Reset Password</button>
-      </form>
-      {message && <p>{message}</p>}
+        </form>
+        {message && <p>{message}</p>}
+      </div>
     </div>
   );
 };

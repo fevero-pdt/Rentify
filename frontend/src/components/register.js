@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { registerUser, verifyUser } from "../services/api";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
+import "./register.css";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -15,14 +16,14 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    // Validate email domain
+    // Validate email domain (optional)
     // if (!email.endsWith("@nitc.ac.in")) {
     //   setMessage("Only emails with @nitc.ac.in domain are allowed.");
     //   return;
     // }
 
     try {
-      const response = await registerUser({ email, password });
+      const response = await registerUser({ email, password, roles });
       setMessage(response.data.message);
       setStep(2); // Move to verification step
     } catch (error) {
@@ -40,11 +41,8 @@ const Register = () => {
     e.preventDefault();
     try {
       const response = await verifyUser({ email, password, code });
-      // i want to send an alert to the user that the verification was successful
-      alert(response.data.message);
-
-      // setMessage(response.data.message);
-      setRedirectToLogin(true); // Trigger redirection
+      alert(response.data.message); // Show alert on success
+      setRedirectToLogin(true); // Redirect to login page
     } catch (error) {
       setMessage(error.response?.data?.message || "Verification failed.");
     }
@@ -55,61 +53,67 @@ const Register = () => {
   }
 
   return (
-    <div>
+    <div className="signup-container">
       {step === 1 && (
-        <div>
-          <h1>Register</h1>
-          <form onSubmit={handleRegister}>
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            <label>
+        <div className="signup-box">
+          <div className="signup-form-container">
+            <h1>Register</h1>
+            <form onSubmit={handleRegister}>
               <input
-                type="checkbox"
-                checked={roles.includes("Owner")}
-                onChange={() => toggleRole("Owner")}
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
               />
-              Owner
-            </label>
-            <label>
               <input
-                type="checkbox"
-                checked={roles.includes("Renter")}
-                onChange={() => toggleRole("Renter")}
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
               />
-              Renter
-            </label>
-            <button type="submit">Register</button>
-          </form>
+              <div className="tick-box">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={roles.includes("Owner")}
+                    onChange={() => toggleRole("Owner")}
+                  />
+                  Owner
+                </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={roles.includes("Renter")}
+                    onChange={() => toggleRole("Renter")}
+                  />
+                  Renter
+                </label>
+              </div>
+              <button type="submit">Register</button>
+            </form>
+          </div>
         </div>
       )}
       {step === 2 && (
-        <div>
-          <h1>Verify Email</h1>
-          <form onSubmit={handleVerify}>
-            <input
-              type="text"
-              placeholder="Enter Verification Code"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              required
-            />
-            <button type="submit">Verify</button>
-          </form>
+        <div className="signup-box verification-container">
+          <div className="signup-form-container">
+            <h1>Verify Email</h1>
+            <form onSubmit={handleVerify}>
+              <input
+                type="text"
+                placeholder="Enter Verification Code"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                required
+              />
+              <button type="submit">Verify</button>
+            </form>
+          </div>
         </div>
       )}
-      <p>{message}</p>
+      {message && <p className="message">{message}</p>}
     </div>
   );
 };

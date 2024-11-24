@@ -1,0 +1,194 @@
+/* General Styles */
+.hihi
+{
+    padding: 40px;
+    background-image: url("28802.jpg");
+}
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7fa;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+  }
+  
+  h1 {
+    font-size: 32px;
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+  }
+  
+  h2 {
+    font-size: 24px;
+    color: #2c3e50;
+    margin-bottom: 20px;
+  }
+  
+  /* Card Container */
+  .card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Form Styling */
+  .admin-add-user-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .admin-add-user-form form input,
+  .admin-add-user-form form select {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 95%;
+  }
+  
+  .admin-add-user-form form button {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 97%;
+  }
+  
+  .admin-add-user-form form button:hover {
+    background-color: #2980b9;
+  }
+  
+  /* Manage Users and Items */
+  .admin-add-user-form ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .admin-add-user-form li {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .admin-add-user-form li p {
+    margin: 0;
+    font-size: 16px;
+  }
+  
+  .admin-add-user-form li button {
+    background-color: #e74c3c;
+    color: white;
+    padding: 8px 15px;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .admin-add-user-form li button:hover {
+    background-color: #c0392b;
+  }
+  
+  /* Responsive Grid */
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  
+  /* Error and Loading Messages */
+  .error-message {
+    color: red;
+    font-size: 18px;
+    text-align: center;
+  }
+  
+  .loading-message {
+    color: #3498db;
+    font-size: 18px;
+    text-align: center;
+  }
+  
+  .admin-add-user-form
+  {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    width: 60%;
+  }
+ .manage-user li
+ {
+    display: flex;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    width: 60%;
+ }
+ .manage-user li button {
+    display: flex;
+    background-color: #d61919;
+    color: white;
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 8%;
+    
+  }
+  .manage-user ul,.manage-item ul{
+    padding: 0;
+  }
+  .manage-item li
+ {
+    display: flex;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    width: 60%;
+ }
+ .manage-item li button {
+    display: flex;
+    background-color: #d61919;
+    color: white;
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 8%;
+  }

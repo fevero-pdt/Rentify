@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { checkSession, fetchItems, searchItems } from "../services/api";
 import RentalRequestButton from "./RentalRequestButton";
 import ViewRequests from "./ViewRequests";
+import "./dashboard.css"
 
 const Dashboard = ({ user, setUser }) => {
   const [items, setItems] = useState([]); // State to store all items
@@ -65,36 +66,61 @@ const Dashboard = ({ user, setUser }) => {
   }
 
   return (
-    <div>
+    <div className="hehe">
+      <div className="top-container">
+      <img src="/CCCCC.jpg" alt="car" className="cc"/>
+        <div className="writing">
+          <h1 className="text-center mb-4">Rentify</h1>
+          <p>Your <span className="pro">go-to</span> platform for rentals</p>
+        </div>
+      </div>
+      <div className="add-item-dash">
+        <ul>
+         <p className="dramatic-text">
+        You have something to give out for rent? <br /> 
+        <strong>Go ahead, buddy!</strong>
+        </p>
+        <li>
+        <Link to="/addItem" className="dramatic-link">
+          Add Items Now 🚀
+        </Link>
+         </li>
+        </ul>
+      </div>
 
-      
-      <ul>
-        <li><Link to="/addItem">Add Items</Link></li>
-      </ul>
 
-      <div>
-        <input
+      <div className="dsearch-bar">
+        <p style={{ width:"80%",paddingBottom:"5px"}}>Wanna search something???</p>
+        <input style={{ display: "flex", width:"80%",paddingBottom:"5px"}}
           type="text"
           placeholder="Search items by name..."
           value={query}
           onChange={handleSearch}
-          style={{ width: "300px", padding: "10px", margin: "20px 0" }}
+          className="search-input"
         />
       </div>
-
-      <h2>Available Items</h2>
+      <h2 style={{ display: "flex", justifyContent: "center" }}>
+  {query.trim() ? "Results based on your search" : "Items Listed"}
+</h2>
+      <div className="available-items">
       {searchResults.length === 0 ? (
         <p>No items found.</p>
       ) : (
         <ul>
           {searchResults.map((item) => (
-            <li key={item._id} style={{ marginBottom: "20px", borderBottom: "1px solid #ddd", paddingBottom: "10px" }}>
+            <li key={item._id}>
               <h3>{item.name}</h3>
               <p>{item.description}</p>
               <p>Price: ${item.price}</p>
               <p>Owner: {item.owner?.email || "Unknown"}</p>
-              <p>Status: {item.isAvailable ? "Available" : "Rented"}</p>
-
+              
+              <span
+            className={`status-badge ${
+              item.isAvailable ? "available" : "rented"
+            }`}
+          >
+            {item.isAvailable ? "Available" : "Rented"}
+          </span>
               {/* Rental Request Button */}
               {item.isAvailable ? (
                 <RentalRequestButton itemId={item._id} />
@@ -103,6 +129,7 @@ const Dashboard = ({ user, setUser }) => {
               )}
 
               {/* Toggle to View Requests */}
+              <div className="button-group">
               {item.owner?._id === user._id && (
                 <>
                   <button
@@ -120,10 +147,12 @@ const Dashboard = ({ user, setUser }) => {
                   {selectedItemId === item._id && <ViewRequests itemId={item._id} />}
                 </>
               )}
+              </div>
             </li>
           ))}
         </ul>
       )}
+      </div>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import "./forgotpass.css"
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -21,22 +22,27 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div>
-      <h3>Forgot Password</h3>
-      <form onSubmit={handleForgotPassword}>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Send Verification Code</button>
-      </form>
-      {message && <p>{message}</p>}
+    <div className="comp">
+      <div className="forgot-password-container">
+  <h3 className="forgot-password-header">Forgot Password</h3>
+  <form onSubmit={handleForgotPassword} className="forgot-password-form">
+    <div className="form-group">
+      <label htmlFor="email" className="form-label">Email:</label>
+      <input
+        id="email"
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+        className="form-input"
+      />
     </div>
+    <button type="submit" className="form-button">Send Verification Code</button>
+  </form>
+  {message && <p className="form-message">{message}</p>}
+</div>
+    </div>
+
   );
 };
 

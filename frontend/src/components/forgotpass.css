@@ -1,0 +1,100 @@
+/* Container styling */
+.comp
+{
+    background-image: url("28802.jpg");
+    background-size: cover; /* Ensure the image covers the entire screen */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Prevent tiling */
+    height: 100vh; /* Full viewport height */
+    width: 100%; /* Full width */
+    display: flex; /* Flexbox to center content */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    padding: 0; /* Remove padding */
+    margin: 0;
+}
+.forgot-password-container {
+  max-width: 800px;
+  width: 35%;
+  height: 25%;
+  margin: 50px auto; /* Center the form */
+  padding: 20px;
+  background-color: #f9f9f9; /* Light gray background */
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  text-align: center; /* Center-align content */
+  font-family: Arial, sans-serif;
+}
+
+/* Header styling */
+.forgot-password-header {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+/* Form styling */
+.forgot-password-form {
+  display: flex;
+  flex-direction: column; /* Stack inputs vertically */
+  gap: 15px; /* Spacing between form elements */
+}
+
+/* Form group styling */
+.form-group {
+  text-align: left; /* Align labels to the left */
+}
+
+/* Label styling */
+.form-label {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 5px;
+  display: block;
+}
+
+/* Input field styling */
+.form-input {
+  width: 94%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-input:focus {
+  border-color: #007bff; /* Blue border on focus */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3); /* Glowing effect */
+  outline: none;
+}
+
+/* Button styling */
+.form-button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.form-button:hover {
+  background-color: #0056b3; /* Darker blue */
+  transform: scale(1.05); /* Slight zoom effect */
+}
+
+.form-button:active {
+  background-color: #004085; /* Even darker blue */
+  transform: scale(0.95); /* Click effect */
+}
+
+/* Message styling */
+.form-message {
+  margin-top: 15px;
+  font-size: 1rem;
+  color: green; /* Change this based on your message type */
+}

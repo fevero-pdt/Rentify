@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { searchItems } from "../services/api";
+import "./search.css"
 
 const Search = () => {
   const [query, setQuery] = useState(""); // Search query
@@ -29,7 +30,7 @@ const Search = () => {
 
   return (
     
-    <div>
+    <div className="search-container">
       <input
         type="text"
         placeholder="Search by item name or owner email..."

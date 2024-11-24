@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchProfile, deleteItem, updatePassword } from "../services/api";
+import "./profile.css"
 
 const Profile = () => {
   const [profile, setProfile] = useState(null); // User profile data
@@ -77,14 +78,17 @@ const Profile = () => {
   }
 
   return (
-    <div>
-      <h1>Profile</h1>
+    <div className="profile-page">
+      <h1 className="profile-header">Profile</h1>
+      <div className="section-header">
       <h2>User Information</h2>
       <p><strong>Email:</strong> {profile.email}</p>
       <p><strong>Roles:</strong> {profile.roles.join(", ")}</p>
+      </div>
 
-      <h2>Update Password</h2>
-      <form onSubmit={handlePasswordUpdate} style={{ marginBottom: "20px" }}>
+      <div className="section-header">
+        <h2 >Update Password</h2>
+      <form onSubmit={handlePasswordUpdate} style={{ marginBottom: "20px" }} className="password-update-form">
         <div>
           <label>Old Password:</label>
           <input
@@ -93,8 +97,6 @@ const Profile = () => {
             onChange={(e) => setPasswordForm({ ...passwordForm, oldPassword: e.target.value })}
             required
           />
-        </div>
-        <div>
           <label>New Password:</label>
           <input
             type="password"
@@ -106,19 +108,25 @@ const Profile = () => {
         <button type="submit" style={{ marginTop: "10px" }}>
           Update Password
         </button>
-      </form>
+        </form>
+      </div>
+      
       {passwordMessage && <p style={{ color: passwordMessage.includes("success") ? "green" : "red" }}>{passwordMessage}</p>}
 
-      <h2>Search Your Owned Items</h2>
+      
+
+      <div className="section-header">
+      <h2 >Search Your Owned Items</h2>
       <input
         type="text"
         placeholder="Search items by name or description..."
         value={query}
         onChange={handleSearch}
         style={{ width: "300px", padding: "10px", margin: "20px 0" }}
+        className="search-bar"
       />
-
-      <h2>Owned Items</h2>
+      <h2 >Owned Items</h2>
+      <div className="owned-items">
       {filteredItems.length === 0 ? (
         <p>No items match your search.</p>
       ) : (
@@ -139,6 +147,8 @@ const Profile = () => {
           ))}
         </ul>
       )}
+      </div>
+      </div>
     </div>
   );
 };

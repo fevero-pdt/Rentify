@@ -1,0 +1,83 @@
+.signup-container
+{
+    display: flex;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center; 
+    background-image: url('K:/Rentify/frontend/public/28802.jpg'); 
+    background-size: cover; 
+    background-position: center;
+    background-repeat: no-repeat; 
+    background-attachment: fixed; 
+    padding: 20px; 
+}
+.signup-box
+{
+    display: flex;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    width: 50%; /* Increased width for more space */
+    max-width: 1200px; /* Allow the box to stretch up to this size */
+    height: auto;
+    margin: 20px;
+}
+.signup-form-container
+{
+    flex: 1; /* Occupy equal space with the info-container */
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.signup-form-container input {
+    width: 60%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.signup-form-container button {
+    width: 85%;
+    padding: 12px;
+    background: linear-gradient(135deg, #ff6347, #ff8c42);
+    border: none;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+.verification-container {
+    background: rgba(255, 255, 255, 0.9); /* Match the signup-box */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .message {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    color: #ff6347; /* Highlight message with orange color */
+    margin-top: 20px;
+  }
+  .tick-box
+  {
+    
+  }

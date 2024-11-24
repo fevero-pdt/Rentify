@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { deleteAdminUser, deleteAdminItem, addAdminUser, addAdminItem } from "../services/api";
 import axios from "axios";
+import "./admindashboard.css"
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
@@ -91,10 +92,11 @@ const AdminDashboard = () => {
   if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   return (
-    <div>
+    <div className="hihi">
       <h1>Admin Dashboard</h1>
 
       {/* Add User Form */}
+      <div className="admin-add-user-form">
       <h2>Add User</h2>
       <form onSubmit={handleAddUser}>
         <input
@@ -121,8 +123,10 @@ const AdminDashboard = () => {
         </select>
         <button type="submit">Add User</button>
       </form>
+      </div>
 
-      {/* Add Item Form */}
+      <div className="admin-add-user-form">
+        {/* Add Item Form */}
       <h2>Add Item</h2>
       <form onSubmit={handleAddItem}>
         <input
@@ -155,16 +159,24 @@ const AdminDashboard = () => {
         />
         <button type="submit">Add Item</button>
       </form>
+      </div>
+
+      
 
       {/* Manage Users */}
       <h2>Manage Users</h2>
+      <div className="manage-user">
       {users.length === 0 ? (
         <p>No users found.</p>
       ) : (
         <ul>
           {users.map((user) => (
-            <li key={user._id}>
-              <p>
+            <li key={user._id}
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",}}>
+              <p >
                 <strong>Email:</strong> {user.email}
               </p>
               <button
@@ -177,15 +189,21 @@ const AdminDashboard = () => {
           ))}
         </ul>
       )}
+      </div>
 
       {/* Manage Items */}
       <h2>Manage Items</h2>
+      <div className="manage-item">
       {items.length === 0 ? (
         <p>No items found.</p>
       ) : (
         <ul>
           {items.map((item) => (
-            <li key={item._id}>
+            <li key={item._id}
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",}}>
               <p>
                 <strong>Name:</strong> {item.name}
                 <br />
@@ -201,6 +219,7 @@ const AdminDashboard = () => {
           ))}
         </ul>
       )}
+      </div>
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { addItem } from "../services/api";
+import "./AddItem.css";
 
 const AddItem = ({ user }) => {
   const [name, setName] = useState("");
@@ -21,7 +22,7 @@ const AddItem = ({ user }) => {
   if (!user) return <p>Loading...</p>;
 
   return (
-    <div>
+    <div className="add-item-container">
       <h2>Add Item</h2>
       <form onSubmit={handleAddItem}>
         <input

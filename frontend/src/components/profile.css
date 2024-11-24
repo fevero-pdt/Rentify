@@ -1,0 +1,173 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7fa;
+    color: #333;
+  }
+  
+  h1, h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+  }
+  
+  .profile-page
+  {
+    padding: 40px;
+    background-image: url("28802.jpg");
+  }
+  h1.profile-header {
+    font-size: 32px;
+    text-align: center;
+    margin-top: 30px;
+  }
+  
+  h2.section-header {
+    font-size: 24px;
+    margin-top: 40px;
+  }
+  .section-header
+  {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  }
+  /* Profile Section */
+  .user-info {
+    font-size: 18px;
+    line-height: 1.6;
+  }
+  
+  .user-info strong {
+    color: #2c3e50;
+  }
+  
+  /* Password Update Form */
+  .password-update-form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .password-update-form div {
+    margin-bottom: 15px;
+  }
+  
+  .password-update-form input {
+    padding: 10px;
+    font-size: 16px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 5px;
+  }
+  
+  .password-update-form button {
+    background-color: #27ae60;
+    color: white;
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .password-update-form button:hover {
+    background-color: #2ecc71;
+  }
+  
+  /* Password update message */
+  .password-update-form p {
+    margin-top: 10px;
+    font-size: 16px;
+    text-align: center;
+  }
+  
+  .password-update-form p.green {
+    color: green;
+  }
+  
+  .password-update-form p.red {
+    color: red;
+  }
+  
+  /* Search Bar */
+  .search-bar {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    width: 350px;
+  }
+  
+  .search-bar:focus {
+    outline: none;
+    border-color: #3498db;
+  }
+  
+  /* Owned Items List */
+  .owned-items {
+    margin-top: 30px;
+  }
+  
+  .owned-items ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .owned-items li {
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .owned-items li h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .owned-items li p {
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+  
+  .owned-items button {
+    background-color: #e74c3c;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .owned-items button:hover {
+    background-color: #c0392b;
+  }
+  
+  .owned-items p {
+    font-size: 16px;
+    color: #7f8c8d;
+  }
+  
+  /* No items found message */
+  .owned-items p {
+    font-style:normal;
+    color: #000000;
+  }
+  

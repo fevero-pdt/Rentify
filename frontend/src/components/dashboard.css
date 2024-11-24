@@ -1,0 +1,213 @@
+.hehe {
+    padding-left: 10px;
+    background-image: url("28802.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.available-items h2
+{
+    padding-left: 30px;
+}
+.cc{
+    width: 100%;
+}
+.available-items {
+    margin-top: 20px;
+}
+
+/* Card container */
+.available-items ul {
+    list-style: none;
+    padding: 20px;
+}
+
+.available-items li {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.available-items li:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Title styling */
+.available-items h3 {
+    font-size: 1.2rem;
+    margin: 0;
+    color: #333;
+}
+
+/* Paragraph styling */
+.available-items p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* Status badge */
+.status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    border-radius: 12px;
+    font-weight: bold;
+    color: #ffffff;
+    margin-top: 10px;
+}
+
+.status-badge.available {
+    background-color: #4caf50; /* Green for available */
+}
+
+.status-badge.rented {
+    background-color: #f44336; /* Red for rented */
+}
+
+/* Button group styling */
+.button-group {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.button-group button {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    background-color: #b248f4;
+}
+
+.button-group .btn-primary {
+    background-color: #2196f3;
+}
+
+.button-group .btn-primary:hover {
+    background-color: #1976d2;
+}
+
+.button-group .btn-secondary {
+    background-color: #58deff;
+}
+
+.button-group .btn-secondary:hover {
+    background-color: #757575;
+}
+/* Top container styling */
+.top-container {
+    position: relative; /* Positioning for absolute children */
+    width: 100%;
+    height: auto; /* Ensure the container scales properly with the image */
+}
+
+.cc {
+    width: 100%; /* Full width for the image */
+    height: auto; /* Maintain aspect ratio */
+}
+
+/* Writing (Text on Image) */
+.writing {
+    position: absolute; /* Position the text over the image */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust positioning for perfect centering */
+    text-align: center; /* Center-align text */
+    background-color: rgba(255, 255, 255, 225); /* Optional background for visibility */
+    padding: 10px 20px; /* Add padding for better readability */
+    border-radius: 10px; /* Rounded corners */
+}
+
+/* Adjust the heading */
+.writing h1 {
+    font-size: 2.5rem; /* Adjust size as needed */
+    margin: 0;
+}
+
+/* Adjust the paragraph */
+.writing p {
+    font-size: 1rem;
+    margin: 5px 0;
+}
+
+
+
+/* Add Item Dashboard */
+.add-item-dash{
+    text-align: center;
+    padding: 50px;
+    margin: 20px auto;
+    background: linear-gradient(135deg, #f0f4ff, #eaf3ff); /* Subtle gradient */
+    color: #333;
+    border-radius: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Balanced shadow for depth */
+    transition: transform 0.3s ease;
+  }
+  .dsearch-bar{
+    text-align: center;
+    padding: 10px;
+    background: linear-gradient(135deg, #f0f4ff, #eaf3ff); /* Subtle gradient */
+    color: #333;
+    border-radius: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Balanced shadow for depth */
+    transition: transform 0.3s ease;
+    height: 45px;
+    width: 90%;
+    display: flex
+;
+}
+  
+  
+  .add-item-dash:hover {
+    transform: translateY(-5px); /* Slight hover effect */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .add-item-dash ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .add-item-dash .add-item-text {
+    font-size: 1.5rem;
+    font-weight: 600; /* Slightly bolder for emphasis */
+    margin-bottom: 20px;
+    color: #444;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Gentle text shadow */
+  }
+  
+  .add-item-dash .add-item-text strong {
+    color: #007bff; /* Highlight key phrase */
+  }
+  
+  .add-item-dash .add-item-link {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 30px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+    background: linear-gradient(90deg, #007bff, #0056b3); /* Gradient button */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .add-item-dash .add-item-link:hover {
+    transform: scale(1.05);
+    background: linear-gradient(90deg, #0056b3, #004085); /* Darker gradient on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+
+  
