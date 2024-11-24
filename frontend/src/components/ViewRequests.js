@@ -6,8 +6,6 @@ const ViewRequests = ({ itemId }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isItemReturned, setIsItemReturned] = useState(false); // Track item return status
-  // const [isAvailable, setIsAvailable] = useState(true); // Track item's availability
-
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -95,7 +93,9 @@ const ViewRequests = ({ itemId }) => {
             >
               <p>
                 <strong>Renter Email:</strong> {req.renter?.email || "Unknown"} <br />
-                <strong>Status:</strong> {req.status}
+                <strong>Status:</strong> {req.status} <br />
+                <strong>Request Date:</strong> {new Date(req.requestDate).toLocaleString()} <br />
+                <strong>Desired Date:</strong> {new Date(req.desiredDate).toLocaleString()}
               </p>
               {req.status === "pending" && (
                 <div>

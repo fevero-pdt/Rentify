@@ -16,7 +16,7 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    // Validate email domain (optional)
+    // Validate email domain
     // if (!email.endsWith("@nitc.ac.in")) {
     //   setMessage("Only emails with @nitc.ac.in domain are allowed.");
     //   return;
