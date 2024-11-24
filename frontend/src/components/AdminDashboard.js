@@ -164,7 +164,7 @@ const AdminDashboard = () => {
       
 
       {/* Manage Users */}
-      <h2>Manage Users</h2>
+      <h2 className="color">Manage Users</h2>
       <div className="manage-user">
       {users.length === 0 ? (
         <p>No users found.</p>
@@ -192,7 +192,7 @@ const AdminDashboard = () => {
       </div>
 
       {/* Manage Items */}
-      <h2>Manage Items</h2>
+      <h2 className="color">Manage Items</h2>
       <div className="manage-item">
       {items.length === 0 ? (
         <p>No items found.</p>
