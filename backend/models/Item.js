@@ -12,6 +12,8 @@ const itemSchema = new mongoose.Schema({
             renter: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // Renter making the request
             status: { type: String, enum: ["pending", "accepted", "rejected"], default: "pending" }, // Request status
             requestDate: { type: Date, default: Date.now }, // When the request was made
+            desiredDate: { type: Date, required: true }, // Desired rental date
+        
         },
     ],
 });

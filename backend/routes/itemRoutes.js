@@ -106,74 +106,89 @@ router.get("/search", async (req, res) => {
   
 // Request Item Route
 router.post("/:itemId/request", async (req, res) => {
-    try {
-      if (!req.session || !req.session.user) {
-        return res.status(401).json({ message: "Not authenticated" });
+  try {
+      const { desiredDate } = req.body;
+
+      // Validate the desiredDate field
+      if (!desiredDate) {
+          return res.status(400).json({ message: "Desired date is required." });
       }
-  
-      const userId = req.session.user._id; // Logged-in user's ID
+
+      const userId = req.session.user._id; // Assuming user session is active
       const itemId = req.params.itemId;
-      // const { itemId } = req.params;
-  
+
       const item = await Item.findById(itemId);
       if (!item) {
-        return res.status(404).json({ message: "Item not found" });
+          return res.status(404).json({ message: "Item not found" });
       }
-  
-      if (item.owner.toString() === userId) {
-        return res.status(400).json({ message: "You cannot request your own item." });
-      }
-  
+
+      // Check for existing requests
       const existingRequest = item.rentalRequests.find(
-        (req) => req.renter.toString() === userId
+          (req) => req.renter.toString() === userId
       );
       if (existingRequest) {
-        return res.status(400).json({ message: "Request already sent." });
+          return res.status(400).json({ message: "Request already sent." });
       }
-  
-      item.rentalRequests.push({ renter: userId });
+
+      // Push new rental request
+      item.rentalRequests.push({
+          renter: userId,
+          desiredDate: new Date(desiredDate), // Ensure proper date formatting
+      });
       await item.save();
-  
+
       res.status(200).json({ message: "Rental request sent successfully." });
-    } catch (error) {
-      console.error("Error sending rental request:", error);
+  } catch (error) {
+      console.error("Error processing rental request:", error);
       res.status(500).json({ message: "Failed to send rental request." });
-    }
+  }
 });
+
+
 
 // Get Rental Requests Route
 router.get("/:itemId/requests", async (req, res) => {
   try {
-      // Check if user is authenticated
-      if (!req.session || !req.session.user) {
-          return res.status(401).json({ message: "Not authenticated" });
-      }
+    // Check if user is authenticated
+    if (!req.session || !req.session.user) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
 
-      const userId = req.session.user._id; // Logged-in user's ID
-      const itemId = req.params.itemId;
+    const userId = req.session.user._id; // Logged-in user's ID
+    const itemId = req.params.itemId;
 
-      console.log("Fetching rental requests for item:", itemId, "by user:", userId);
+    console.log("Fetching rental requests for item:", itemId, "by user:", userId);
 
-      // Find the item and populate rental requests
-      const item = await Item.findById(itemId).populate("rentalRequests.renter", "email");
-      if (!item) {
-          console.log("Item not found:", itemId);
-          return res.status(404).json({ message: "Item not found" });
-      }
+    // Find the item and populate rental requests
+    const item = await Item.findById(itemId).populate("rentalRequests.renter", "email");
+    if (!item) {
+      console.log("Item not found:", itemId);
+      return res.status(404).json({ message: "Item not found" });
+    }
 
-      // Verify ownership
-      if (item.owner.toString() !== userId) {
-          console.log("User is not the owner of the item.");
-          return res.status(403).json({ message: "Access denied. You are not the owner of this item." });
-      }
+    // Verify ownership
+    if (item.owner.toString() !== userId) {
+      console.log("User is not the owner of the item.");
+      return res.status(403).json({ message: "Access denied. You are not the owner of this item." });
+    }
 
-      console.log("Rental requests fetched successfully:", item.rentalRequests);
-      res.status(200).json(item.rentalRequests);
+    // Prepare rental requests with desired fields
+    const rentalRequests = item.rentalRequests.map((request) => ({
+      _id: request._id,
+      renter: request.renter?.email || "Unknown",
+      status: request.status,
+      requestDate: request.requestDate,
+      desiredDate: request.desiredDate,
+    }));
+
+    console.log("Rental requests fetched successfully:", rentalRequests);
+    res.status(200).json(rentalRequests);
   } catch (error) {
-      console.error("Error fetching rental requests:", error);
-      res.status(500).json({ message: "Failed to fetch rental requests." });
+    console.error("Error fetching rental requests:", error);
+    res.status(500).json({ message: "Failed to fetch rental requests." });
   }
 });
+
 
 
 // Respond to Rental Request Route
