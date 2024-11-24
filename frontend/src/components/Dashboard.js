@@ -122,11 +122,20 @@ const Dashboard = ({ user, setUser }) => {
             {item.isAvailable ? "Available" : "Rented"}
           </span>
               {/* Rental Request Button */}
-              {item.isAvailable ? (
+              {/* {item.isAvailable ? (
                 <RentalRequestButton itemId={item._id} />
               ) : (
                 <p>This item is currently rented.</p>
-              )}
+              )} */}
+              {item.isAvailable ? (
+        item.owner?._id === user._id ? (
+          <p>You cannot rent your own item.</p>
+        ) : (
+          <RentalRequestButton itemId={item._id} />
+        )
+      ) : (
+        <p>This item is currently rented.</p>
+      )}
 
               {/* Toggle to View Requests */}
               <div className="button-group">
