@@ -113,53 +113,46 @@ const Dashboard = ({ user, setUser }) => {
               <p>{item.description}</p>
               <p>Price: ${item.price}</p>
               <p>Owner: {item.owner?.email || "Unknown"}</p>
-              
+
               <span
-            className={`status-badge ${
-              item.isAvailable ? "available" : "rented"
-            }`}
-          >
-            {item.isAvailable ? "Available" : "Rented"}
-          </span>
+                className={`status-badge ${
+                  item.isAvailable ? "available" : "rented"
+                }`}
+              >
+                {item.isAvailable ? "Available" : "Rented"}
+              </span>
+
               {/* Rental Request Button */}
-              {/* {item.isAvailable ? (
-                <RentalRequestButton itemId={item._id} />
+              {item.owner?._id === user._id ? (
+                <p>You cannot rent your own item.</p>
               ) : (
-                <p>This item is currently rented.</p>
-              )} */}
-              {item.isAvailable ? (
-        item.owner?._id === user._id ? (
-          <p>You cannot rent your own item.</p>
-        ) : (
-          <RentalRequestButton itemId={item._id} />
-        )
-      ) : (
-        <p>This item is currently rented.</p>
-      )}
+                <RentalRequestButton itemId={item._id} />
+              )}
 
               {/* Toggle to View Requests */}
               <div className="button-group">
-              {item.owner?._id === user._id && (
-                <>
-                  <button
-                    onClick={() =>
-                      setSelectedItemId(
-                        selectedItemId === item._id ? null : item._id
-                      )
-                    }
-                    className="btn btn-secondary"
-                  >
-                    {selectedItemId === item._id
-                      ? "Hide Requests"
-                      : "View Requests"}
-                  </button>
-                  {selectedItemId === item._id && <ViewRequests itemId={item._id} />}
-                </>
-              )}
+                {item.owner?._id === user._id && (
+                  <>
+                    <button
+                      onClick={() =>
+                        setSelectedItemId(
+                          selectedItemId === item._id ? null : item._id
+                        )
+                      }
+                      className="btn btn-secondary"
+                    >
+                      {selectedItemId === item._id
+                        ? "Hide Requests"
+                        : "View Requests"}
+                    </button>
+                    {selectedItemId === item._id && <ViewRequests itemId={item._id} />}
+                  </>
+                )}
               </div>
             </li>
           ))}
         </ul>
+
       )}
       </div>
     </div>

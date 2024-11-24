@@ -209,6 +209,11 @@ router.put("/:itemId/requests/:requestId", async (req, res) => {
       return res.status(403).json({ message: "Access denied. You are not the owner of this item." });
     }
 
+    // Check if the item is currently rented
+    if (item.renter) {
+      return res.status(400).json({ message: "The item is currently rented and cannot accept new requests until it is returned." });
+    }
+
     // Find the specific rental request
     const request = item.rentalRequests.id(requestId);
     if (!request) {
@@ -219,12 +224,9 @@ router.put("/:itemId/requests/:requestId", async (req, res) => {
     request.status = status;
 
     if (status === "accepted") {
-      // Assign the renter to the item and mark it as unavailable
+      // Assign the renter and mark the item as unavailable
       item.renter = request.renter;
       item.isAvailable = false;
-
-      // If needed, you can reject other requests here
-      // But the current logic does not automatically reject others
     }
 
     // Save the updated item
@@ -257,6 +259,7 @@ router.put("/:itemId/requests/:requestId", async (req, res) => {
     res.status(500).json({ message: "Failed to respond to rental request." });
   }
 });
+
 
 
 
