@@ -108,42 +108,53 @@ router.get("/search", async (req, res) => {
 // Request Item Route
 router.post("/:itemId/request", async (req, res) => {
   try {
-      const { desiredDate } = req.body;
+    if (!req.session || !req.session.user) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
 
-      // Validate the desiredDate field
-      if (!desiredDate) {
-          return res.status(400).json({ message: "Desired date is required." });
-      }
+    const userId = req.session.user._id; // Logged-in user's ID
+    const itemId = req.params.itemId;
+    const { desiredDate } = req.body;
 
-      const userId = req.session.user._id; // Assuming user session is active
-      const itemId = req.params.itemId;
+    // Validate desiredDate
+    if (!desiredDate || isNaN(new Date(desiredDate))) {
+      return res.status(400).json({ message: "Invalid or missing desired date." });
+    }
 
-      const item = await Item.findById(itemId);
-      if (!item) {
-          return res.status(404).json({ message: "Item not found" });
-      }
+    const item = await Item.findById(itemId);
+    if (!item) {
+      return res.status(404).json({ message: "Item not found." });
+    }
 
-      // Check for existing requests
-      const existingRequest = item.rentalRequests.find(
-          (req) => req.renter.toString() === userId
-      );
-      if (existingRequest) {
-          return res.status(400).json({ message: "Request already sent." });
-      }
+    if (item.owner.toString() === userId) {
+      return res.status(400).json({ message: "You cannot request your own item." });
+    }
 
-      // Push new rental request
-      item.rentalRequests.push({
-          renter: userId,
-          desiredDate: new Date(desiredDate), // Ensure proper date formatting
-      });
-      await item.save();
+    // Check if the renter has already submitted a request for the item
+    const existingRequest = item.rentalRequests.find(
+      (req) => req.renter.toString() === userId
+    );
+    if (existingRequest) {
+      return res.status(400).json({ message: "You have already sent a request for this item." });
+    }
 
-      res.status(200).json({ message: "Rental request sent successfully." });
+    // Add the rental request
+    item.rentalRequests.push({
+      renter: userId,
+      desiredDate: new Date(desiredDate),
+      requestDate: new Date(),
+      status: "pending",
+    });
+
+    await item.save();
+
+    res.status(200).json({ message: "Rental request sent successfully." });
   } catch (error) {
-      console.error("Error processing rental request:", error);
-      res.status(500).json({ message: "Failed to send rental request." });
+    console.error("Error processing rental request:", error);
+    res.status(500).json({ message: "Failed to process rental request." });
   }
 });
+
 
 
 
@@ -210,7 +221,7 @@ router.put("/:itemId/requests/:requestId", async (req, res) => {
     }
 
     // Check if the item is currently rented
-    if (item.renter) {
+    if (item.renter && status === "accepted") {
       return res.status(400).json({ message: "The item is currently rented and cannot accept new requests until it is returned." });
     }
 
@@ -228,6 +239,11 @@ router.put("/:itemId/requests/:requestId", async (req, res) => {
       item.renter = request.renter;
       item.isAvailable = false;
     }
+
+    // Remove all other rejected requests
+    item.rentalRequests = item.rentalRequests.filter(
+      (request) => request.status !== "rejected"
+    );
 
     // Save the updated item
     await item.save();
