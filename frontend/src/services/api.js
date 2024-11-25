@@ -28,9 +28,9 @@ export const resetPassword = async (resetData) => {
   return await axios.post("http://localhost:5002/users/reset-password", resetData);
 };
 
-// Admin
-export const deleteAdminUser = async (userId) => {
-  return await API.delete(`/admin/users/${userId}`);
+// Delete User
+export const deleteAdminUser = async (userId, data) => {
+  return await API.put(`/admin/users/${userId}/delete`, data, { withCredentials: true });
 };
 
 export const deleteAdminItem = async (itemId) => {

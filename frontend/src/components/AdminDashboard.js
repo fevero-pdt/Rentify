@@ -10,7 +10,7 @@ const AdminDashboard = () => {
   const [error, setError] = useState(null);
 
   // States for adding users and items
-  const [newUser, setNewUser] = useState({ email: "", password: "", phone: "", roles: "Renter" }); // Added phone state
+  const [newUser, setNewUser] = useState({ email: "", password: "", phone: "", roles: "Renter" });
   const [newItem, setNewItem] = useState({ name: "", description: "", price: "", ownerEmail: "" });
 
   useEffect(() => {
@@ -63,9 +63,15 @@ const AdminDashboard = () => {
   };
 
   const handleDeleteUser = async (userId) => {
+    const reason = window.prompt("Please provide a reason for deleting this user:");
+    if (!reason) {
+      alert("Deletion cancelled. A reason is required.");
+      return;
+    }
+  
     if (window.confirm("Are you sure you want to delete this user?")) {
       try {
-        await deleteAdminUser(userId);
+        await deleteAdminUser(userId, { reason }); // Pass the reason in the body
         setUsers((prev) => prev.filter((user) => user._id !== userId));
         alert("User deleted successfully.");
       } catch (err) {
@@ -73,7 +79,7 @@ const AdminDashboard = () => {
         alert("Failed to delete user.");
       }
     }
-  };
+  };  
 
   const handleDeleteItem = async (itemId) => {
     if (window.confirm("Are you sure you want to delete this item?")) {
@@ -128,7 +134,7 @@ const AdminDashboard = () => {
             <option value="Owner">Owner</option>
           </select>
           <button type="submit">Add User</button>
-        </form>
+          </form>
       </div>
       <div className="admin-add-user-form">
         {/* Add Item Form */}
@@ -163,7 +169,7 @@ const AdminDashboard = () => {
           required
         />
         <button type="submit">Add Item</button>
-      </form>
+        </form>
       </div>
 
       {/* Manage Users */}
@@ -174,17 +180,22 @@ const AdminDashboard = () => {
         ) : (
           <ul>
             {users.map((user) => (
-              <li key={user._id}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",}}>
+              <li
+                key={user._id}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
                 <p>
                   <strong>Email:</strong> {user.email}
                   <br />
                   <strong>Phone:</strong> {user.phone || "Not Provided"} {/* Display phone */}
                 </p>
-                <button onClick={() => handleDeleteUser(user._id)} className="btn btn-danger">Delete User</button>
+                <button onClick={() => handleDeleteUser(user._id)} className="btn btn-danger">
+                  Delete User
+                </button>
               </li>
             ))}
           </ul>
@@ -199,17 +210,22 @@ const AdminDashboard = () => {
         ) : (
           <ul>
             {items.map((item) => (
-              <li key={item._id}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",}}>
+              <li
+                key={item._id}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
                 <p>
                   <strong>Name:</strong> {item.name}
                   <br />
                   <strong>Owner:</strong> {item.owner?.email || "Unknown"}
                 </p>
-                <button onClick={() => handleDeleteItem(item._id)} className="btn btn-danger">Delete Item</button>
+                <button onClick={() => handleDeleteItem(item._id)} className="btn btn-danger">
+                  Delete Item
+                </button>
               </li>
             ))}
           </ul>
