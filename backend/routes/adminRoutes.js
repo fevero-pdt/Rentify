@@ -19,7 +19,7 @@ router.get("/users", isAuthenticated, isAdmin, async (req, res) => {
 
 // Add Users
 router.post("/add-users", isAuthenticated, isAdmin, async (req, res) => {
-    const { email, password, roles } = req.body;
+    const { email, password, phone, roles } = req.body;
   
     try {
       const existingUser = await User.findOne({ email });
@@ -31,6 +31,7 @@ router.post("/add-users", isAuthenticated, isAdmin, async (req, res) => {
       const user = new User({
         email,
         password: hashedPassword,
+        phone,
         roles: roles || ["Renter"],
         verified: true, // Assuming admin-registered users are verified
       });

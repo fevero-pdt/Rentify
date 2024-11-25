@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { deleteAdminUser, deleteAdminItem, addAdminUser, addAdminItem } from "../services/api";
 import axios from "axios";
-import "./admindashboard.css"
+import "./admindashboard.css";
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
@@ -10,7 +10,7 @@ const AdminDashboard = () => {
   const [error, setError] = useState(null);
 
   // States for adding users and items
-  const [newUser, setNewUser] = useState({ email: "", password: "", roles: "Renter" });
+  const [newUser, setNewUser] = useState({ email: "", password: "", phone: "", roles: "Renter" }); // Added phone state
   const [newItem, setNewItem] = useState({ name: "", description: "", price: "", ownerEmail: "" });
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const AdminDashboard = () => {
       const response = await addAdminUser(newUser);
       setUsers((prev) => [...prev, response.data.user]);
       alert("User added successfully.");
-      setNewUser({ email: "", password: "", roles: "Renter" }); // Reset form
+      setNewUser({ email: "", password: "", phone: "", roles: "Renter" }); // Reset form
     } catch (err) {
       console.error("Error adding user:", err);
       alert("Failed to add user.");
@@ -97,34 +97,39 @@ const AdminDashboard = () => {
 
       {/* Add User Form */}
       <div className="admin-add-user-form">
-      <h2>Add User</h2>
-      <form onSubmit={handleAddUser}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={newUser.email}
-          onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={newUser.password}
-          onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
-          required
-        />
-        <select
-          value={newUser.roles}
-          onChange={(e) => setNewUser({ ...newUser, roles: e.target.value })}
-        >
-          <option value="Renter">Renter</option>
-          <option value="Owner">Owner</option>
-          {/* <option value="Admin">Admin</option> */}
-        </select>
-        <button type="submit">Add User</button>
-      </form>
+        <h2>Add User</h2>
+        <form onSubmit={handleAddUser}>
+          <input
+            type="email"
+            placeholder="Email"
+            value={newUser.email}
+            onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={newUser.password}
+            onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+            required
+          />
+          <input
+            type="tel"
+            placeholder="Phone Number"
+            value={newUser.phone}
+            onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })}
+            required
+          />
+          <select
+            value={newUser.roles}
+            onChange={(e) => setNewUser({ ...newUser, roles: e.target.value })}
+          >
+            <option value="Renter">Renter</option>
+            <option value="Owner">Owner</option>
+          </select>
+          <button type="submit">Add User</button>
+        </form>
       </div>
-
       <div className="admin-add-user-form">
         {/* Add Item Form */}
       <h2>Add Item</h2>
@@ -161,64 +166,54 @@ const AdminDashboard = () => {
       </form>
       </div>
 
-      
-
       {/* Manage Users */}
       <h2 className="color">Manage Users</h2>
       <div className="manage-user">
-      {users.length === 0 ? (
-        <p>No users found.</p>
-      ) : (
-        <ul>
-          {users.map((user) => (
-            <li key={user._id}
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",}}>
-              <p >
-                <strong>Email:</strong> {user.email}
-              </p>
-              <button
-                onClick={() => handleDeleteUser(user._id)}
-                className="btn btn-danger"
-              >
-                Delete User
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
+        {users.length === 0 ? (
+          <p>No users found.</p>
+        ) : (
+          <ul>
+            {users.map((user) => (
+              <li key={user._id}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",}}>
+                <p>
+                  <strong>Email:</strong> {user.email}
+                  <br />
+                  <strong>Phone:</strong> {user.phone || "Not Provided"} {/* Display phone */}
+                </p>
+                <button onClick={() => handleDeleteUser(user._id)} className="btn btn-danger">Delete User</button>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       {/* Manage Items */}
       <h2 className="color">Manage Items</h2>
       <div className="manage-item">
-      {items.length === 0 ? (
-        <p>No items found.</p>
-      ) : (
-        <ul>
-          {items.map((item) => (
-            <li key={item._id}
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",}}>
-              <p>
-                <strong>Name:</strong> {item.name}
-                <br />
-                <strong>Owner:</strong> {item.owner?.email || "Unknown"}
-              </p>
-              <button
-                onClick={() => handleDeleteItem(item._id)}
-                className="btn btn-danger"
-              >
-                Delete Item
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
+        {items.length === 0 ? (
+          <p>No items found.</p>
+        ) : (
+          <ul>
+            {items.map((item) => (
+              <li key={item._id}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",}}>
+                <p>
+                  <strong>Name:</strong> {item.name}
+                  <br />
+                  <strong>Owner:</strong> {item.owner?.email || "Unknown"}
+                </p>
+                <button onClick={() => handleDeleteItem(item._id)} className="btn btn-danger">Delete Item</button>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
