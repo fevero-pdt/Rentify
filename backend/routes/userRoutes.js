@@ -10,33 +10,45 @@ const verificationCodes = new Map(); // Temporary store for verification codes
 
 // Register Route
 router.post("/register", async (req, res) => {
-  const { email, password, roles } = req.body;
+  const { email, password, phone, roles} = req.body;
 
-  //Check email domain
+  // Validate input
+  if (!email || !password || !phone) {
+    return res.status(400).json({ message: "Email, password, and phone number are required." });
+  }
+
+  // Validate email domain
   if (!email.endsWith("@nitc.ac.in")) {
     return res.status(400).json({ message: "Only emails with @nitc.ac.in domain are allowed." });
   }
 
+  // Check if user already exists
   const existingUser = await User.findOne({ email });
   if (existingUser) {
     return res.status(400).json({ message: "User already exists" });
   }
 
+  // Generate verification code
   const code = generateVerificationCode();
   verificationCodes.set(email, code);
 
   try {
+    // Send email verification
     await sendVerificationEmail(email, code);
     res.status(200).json({ message: "Verification code sent to your email." });
   } catch (error) {
-    console.error("Error sending email:", error);
-    res.status(500).json({ message: "Failed to send verification email." });
+    console.error("Error sending verification email:", error);
+    res.status(500).json({ message: "Failed to send verification code." });
   }
 });
 
 // Verify and Complete Registration
 router.post("/verify", async (req, res) => {
-  const { email, password, roles, code } = req.body;
+  const { email, password, phone, roles, code } = req.body;
+
+  if (!email || !password || !phone || !code) {
+    return res.status(400).json({ message: "All fields are required for verification." });
+  }
 
   const storedCode = verificationCodes.get(email);
   if (!storedCode || storedCode !== code) {
@@ -47,6 +59,7 @@ router.post("/verify", async (req, res) => {
   const user = new User({
     email,
     password: hashedPassword,
+    phone,
     roles: roles || ["Renter"],
     verified: true,
   });
@@ -56,6 +69,7 @@ router.post("/verify", async (req, res) => {
 
   res.status(201).json({ message: "User registered successfully." });
 });
+
 
 // Login Route
 router.post("/login", async (req, res) => {

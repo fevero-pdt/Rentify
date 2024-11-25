@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { registerUser, verifyUser } from "../services/api";
-import axios from "axios";
 import { Navigate } from "react-router-dom";
 import "./register.css";
 
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState(""); // Added state for phone number
   const [roles, setRoles] = useState([]);
   const [code, setCode] = useState("");
   const [step, setStep] = useState(1); // 1 = Register, 2 = Verify
@@ -16,14 +16,9 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    // Validate email domain
-    // if (!email.endsWith("@nitc.ac.in")) {
-    //   setMessage("Only emails with @nitc.ac.in domain are allowed.");
-    //   return;
-    // }
-
     try {
-      const response = await registerUser({ email, password, roles });
+      // Pass phone number to the registerUser API call
+      const response = await registerUser({ email, password, phone, roles });
       setMessage(response.data.message);
       setStep(2); // Move to verification step
     } catch (error) {
@@ -39,14 +34,22 @@ const Register = () => {
 
   const handleVerify = async (e) => {
     e.preventDefault();
+  
     try {
-      const response = await verifyUser({ email, password, code });
+      const response = await verifyUser({
+        email,
+        password,
+        roles: roles.length > 0 ? roles : ["Renter"], // Default to 'Renter' if roles are empty
+        phone,
+        code,
+      });
       alert(response.data.message); // Show alert on success
       setRedirectToLogin(true); // Redirect to login page
     } catch (error) {
       setMessage(error.response?.data?.message || "Verification failed.");
     }
   };
+  
 
   if (redirectToLogin) {
     return <Navigate to="/login" />;
@@ -71,6 +74,13 @@ const Register = () => {
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <input
+                type="tel"
+                placeholder="Phone Number"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
                 required
               />
               <div className="tick-box">
