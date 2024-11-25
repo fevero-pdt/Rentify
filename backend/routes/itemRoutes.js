@@ -209,20 +209,24 @@ router.put("/:itemId/requests/:requestId", async (req, res) => {
       return res.status(400).json({ message: "Invalid status." });
     }
 
-    // Find the item and populate the renter's email in rentalRequests
-    const item = await Item.findById(itemId).populate("rentalRequests.renter", "email");
+    // Find the item and populate the renter's email and owner's details
+    const item = await Item.findById(itemId)
+      .populate("rentalRequests.renter", "email")
+      .populate("owner", "email phone"); // Include owner's phone and email
     if (!item) {
       return res.status(404).json({ message: "Item not found." });
     }
 
     // Verify that the logged-in user is the owner of the item
-    if (item.owner.toString() !== userId) {
+    if (item.owner._id.toString() !== userId) {
       return res.status(403).json({ message: "Access denied. You are not the owner of this item." });
     }
 
     // Check if the item is currently rented
     if (item.renter && status === "accepted") {
-      return res.status(400).json({ message: "The item is currently rented and cannot accept new requests until it is returned." });
+      return res.status(400).json({
+        message: "The item is currently rented and cannot accept new requests until it is returned.",
+      });
     }
 
     // Find the specific rental request
@@ -250,11 +254,12 @@ router.put("/:itemId/requests/:requestId", async (req, res) => {
 
     // Prepare to send an email to the renter
     const renterEmail = request.renter?.email;
+    const ownerPhone = item.owner?.phone;
     if (renterEmail) {
       const emailSubject = `Your rental request has been ${status}`;
       const emailText =
         status === "accepted"
-          ? `Congratulations! Your rental request for the item "${item.name}" has been accepted.`
+          ? `Congratulations! Your rental request for the item "${item.name}" has been accepted. Please contact the owner at ${ownerPhone} for further details.`
           : `Unfortunately, your rental request for the item "${item.name}" has been rejected.`;
 
       // Send email
@@ -275,9 +280,6 @@ router.put("/:itemId/requests/:requestId", async (req, res) => {
     res.status(500).json({ message: "Failed to respond to rental request." });
   }
 });
-
-
-
 
 // Return Item Route
 router.post("/:itemId/return", async (req, res) => {
