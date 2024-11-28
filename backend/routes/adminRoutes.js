@@ -4,8 +4,11 @@ const User = require("../models/User");
 const Item = require("../models/Item");
 const { isAuthenticated, isAdmin } = require("../middleware/auth");
 const { sendEmail } = require("../utils/email");
+const multer = require("multer");
+
 
 const router = express.Router();
+const upload = multer({ dest: 'uploads/' }); // Set destination for file uploads
 
 // Fetch All Users
 router.get("/users", isAuthenticated, isAdmin, async (req, res) => {
@@ -96,8 +99,10 @@ router.get("/items", isAuthenticated, isAdmin, async (req, res) => {
   }
 });
 
-router.post("/add-items", isAuthenticated, isAdmin, async (req, res) => {
+router.post("/add-items", upload.array('images', 10), isAuthenticated, isAdmin, async (req, res) => {
     const { name, description, price, ownerEmail } = req.body;
+    const images = req.files.map(file => `/uploads/${file.filename}`); // Save file paths in DB
+
   
     try {
       const owner = await User.findOne({ email: ownerEmail });
@@ -110,6 +115,7 @@ router.post("/add-items", isAuthenticated, isAdmin, async (req, res) => {
         description,
         price,
         owner: owner._id,
+        images, // Store image paths
       });
   
       await item.save();

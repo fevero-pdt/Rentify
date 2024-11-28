@@ -7,6 +7,7 @@ const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [images, setImages] = useState([]); // State to hold image files
   const [error, setError] = useState(null);
 
   // States for adding users and items
@@ -36,6 +37,11 @@ const AdminDashboard = () => {
     fetchAdminData();
   }, []);
 
+  // Handle image file change
+  const handleImageChange = (e) => {
+    setImages(e.target.files); // Update images with selected files
+  };
+
   const handleAddUser = async (e) => {
     e.preventDefault();
     try {
@@ -51,16 +57,30 @@ const AdminDashboard = () => {
 
   const handleAddItem = async (e) => {
     e.preventDefault();
+  
+    const formData = new FormData();
+    formData.append('name', newItem.name);
+    formData.append('description', newItem.description);
+    formData.append('price', newItem.price);
+    formData.append('ownerEmail', newItem.ownerEmail);
+  
+    // Append all selected images to formData
+    for (let i = 0; i < images.length; i++) {
+      formData.append('images', images[i]);
+    }
+  
     try {
-      const response = await addAdminItem(newItem);
+      const response = await addAdminItem(formData);
       setItems((prev) => [...prev, response.data.item]);
       alert("Item added successfully.");
       setNewItem({ name: "", description: "", price: "", ownerEmail: "" }); // Reset form
+      setImages([]); // Reset image state
     } catch (err) {
       console.error("Error adding item:", err);
       alert("Failed to add item.");
     }
   };
+  
 
   const handleDeleteUser = async (userId) => {
     const reason = window.prompt("Please provide a reason for deleting this user:");
@@ -167,6 +187,13 @@ const AdminDashboard = () => {
           value={newItem.ownerEmail}
           onChange={(e) => setNewItem({ ...newItem, ownerEmail: e.target.value })}
           required
+        />
+        {/* Image input field */}
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={handleImageChange}
         />
         <button type="submit">Add Item</button>
         </form>

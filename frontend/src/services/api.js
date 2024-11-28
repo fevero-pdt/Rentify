@@ -41,8 +41,8 @@ export const addAdminUser = async (userData) => {
   });
 };
 
-export const addAdminItem = async (itemData) => {
-  return await axios.post("http://localhost:5002/admin/add-items", itemData, {
+export const addAdminItem = async (formData) => {
+  return await axios.post("http://localhost:5002/admin/add-items", formData, {
     withCredentials: true,
   });
 };

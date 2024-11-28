@@ -137,6 +137,20 @@ const Profile = () => {
               <p>{item.description}</p>
               <p>Price: ${item.price}</p>
               <p>Status: {item.isAvailable ? "Available" : "Rented"}</p>
+              <div className="item-images">
+                  {item.images && item.images.length > 0 ? (
+                    item.images.map((image, index) => (
+                      <img
+                        key={index}
+                        src={`http://localhost:5002${image}`} // Prepend the base URL
+                        alt={`${item.name} image ${index + 1}`}
+                        className="item-image"
+                      />
+                    ))
+                  ) : (
+                    <p>No images available</p>
+                  )}
+                </div>
               <button
                 onClick={() => handleDelete(item._id)}
                 style={{ color: "white", backgroundColor: "red", padding: "5px 10px", border: "none", cursor: "pointer" }}
