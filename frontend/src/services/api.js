@@ -13,7 +13,6 @@ API.interceptors.response.use(
   }
 );
 
-
 // Auth
 export const registerUser = (userData) => API.post("/users/register", userData);
 export const verifyUser = (verificationData) => API.post("/users/verify", verificationData);
@@ -48,20 +47,31 @@ export const addAdminItem = async (itemData) => {
   });
 };
 
-
-
 // Owner
-export const addItem = async (itemData) => {
-  return axios.post("http://localhost:5002/items/addItem", itemData, {
-    withCredentials: true, // Include cookies for session management
-  });
+export const addItem = async (formData) => {
+
+  try {
+    // Send the FormData to the backend
+    const response = await axios.post("http://localhost:5002/items/addItem", formData, {
+      withCredentials: true, // Include cookies for session management
+    });
+
+    return response; // Return response for further handling in the component
+  } catch (error) {
+    console.error("Error adding item:", error);
+    throw error; // Rethrow to handle error in component
+  }
 };
+
+
 export const fetchProfile = async () => {
-  return await axios.get("http://localhost:5002/users/profile", { withCredentials: true }); // Update with your backend URL
+  return await axios.get("http://localhost:5002/users/profile", { withCredentials: true });
 };
+
 export const deleteItem = async (itemId) => {
-  return await axios.delete(`http://localhost:5002/items/${itemId}`, { withCredentials: true }); // Adjust base URL as needed
+  return await axios.delete(`http://localhost:5002/items/${itemId}`, { withCredentials: true });
 };
+
 export const fetchRequests = async (itemId) => {
   return await axios.get(`http://localhost:5002/items/${itemId}/requests`, { withCredentials: true });
 };
@@ -71,14 +81,15 @@ export const returnItem = async (itemId) => {
   return await API.post(`/items/${itemId}/return`);
 };
 
-
 // Common
 export const fetchItems = async () => {
   return await axios.get("http://localhost:5002/items/");
 };
+
 export const searchItems = async (query) => {
   return await axios.get(`http://localhost:5002/items/search?query=${query}`, { withCredentials: true });
 };
+
 export const updatePassword = async (passwordForm) => {
   const response = await axios.put(
     "http://localhost:5002/users/update-password",
@@ -87,5 +98,6 @@ export const updatePassword = async (passwordForm) => {
   );
   return response.data;
 };
+
 export const checkSession = () => API.get("/session");
 export const logoutUser = () => API.post("/logout");

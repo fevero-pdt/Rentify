@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
 const cors = require("cors");
+const path = require('path');
 const connectDB = require("./config/db");
 const { PORT, SESSION_SECRET } = require("./config/config");
 
@@ -97,7 +98,8 @@ app.use("/admin", adminRoutes);
 //   }
 // });
 
-
+// Serve Images
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 

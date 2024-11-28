@@ -60,7 +60,7 @@ router.post("/add-users", isAuthenticated, isAdmin, async (req, res) => {
       return res.status(404).json({ message: "User not found." });
     }
 
-    // await Item.deleteMany({ owner: userId });
+    await Item.deleteMany({ owner: userId });
 
     const emailSubject = "Account Deletion Notification";
     const emailText = `Your account has been deleted for the following reason:\n\n${reason}`;

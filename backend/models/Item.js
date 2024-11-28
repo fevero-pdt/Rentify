@@ -16,6 +16,7 @@ const itemSchema = new mongoose.Schema({
         
         },
     ],
+    images: { type: [String], required: false }, // Images are optional
 });
 
 module.exports = mongoose.model("Item", itemSchema);

@@ -2,11 +2,11 @@ const express = require("express");
 const Item = require("../models/Item");
 const User = require("../models/User");
 const { sendEmail } = require("../utils/email");
-// const { isAuthenticated } = require("../server");
-// const { authenticate } = require("../middleware/auth");
-
+const multer = require("multer");
 
 const router = express.Router();
+const upload = multer({ dest: 'uploads/' }); // Set destination for file uploads
+
 
 // console.log("isAuthenticated:", isAuthenticated);
 
@@ -22,8 +22,13 @@ router.get("/", async (req, res) => {
 });
 
 // Add item route
-router.post("/addItem", async (req, res) => {
+router.post("/addItem", upload.array('images', 10), async (req, res) => {
+
     const { name, description, price } = req.body;
+    const imagePaths = req.files.map(file => `/uploads/${file.filename}`); // Assuming you store image paths
+
+    // console.log(req.body); // Logs text data
+    // console.log(req.files); // Logs uploaded files
   
     // Ensure the user is authenticated
     if (!req.session || !req.session.user) {
@@ -32,7 +37,13 @@ router.post("/addItem", async (req, res) => {
   
     try {
       // Create and save a new item
-      const newItem = new Item({ name, description, price, owner: req.session.user._id });
+      const newItem = new Item({
+        name,
+        description,
+        price,
+        owner: req.session.user._id, // Logged-in user is the owner
+        images: imagePaths, // Assuming you store image paths in the database
+      });
       await newItem.save();
   
       // Update the user's role to include "Owner"
@@ -51,6 +62,7 @@ router.post("/addItem", async (req, res) => {
       res.status(500).json({ message: "Failed to add item." });
     }
 });
+
 
 // delete item route
 router.delete("/:itemId", async (req, res) => {
